@@ -8,6 +8,7 @@ import com.udacity.vehicles.domain.Location;
 import com.udacity.vehicles.domain.car.Car;
 import com.udacity.vehicles.domain.car.CarRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * Implements the car service create, read, update or delete
@@ -69,7 +70,6 @@ public class CarService {
                         return repository.save(carToBeUpdated);
                     }).orElseThrow(CarNotFoundException::new);
         }
-
         return repository.save(car);
     }
 
@@ -78,16 +78,12 @@ public class CarService {
      * @param id the ID number of the car to delete
      */
     public void delete(Long id) {
-        /**
-         * TODO: Find the car by ID from the `repository` if it exists.
-         *   If it does not exist, throw a CarNotFoundException
-         */
-
-
-        /**
-         * TODO: Delete the car from the repository.
-         */
-
-
+        Optional<Car> optionalCar = repository.findById(id);
+        if (optionalCar.isPresent()) {
+            Car car = optionalCar.get();
+            repository.delete(car);
+        } else {
+            throw new CarNotFoundException("Car not found with id: " + id);
+        }
     }
 }
