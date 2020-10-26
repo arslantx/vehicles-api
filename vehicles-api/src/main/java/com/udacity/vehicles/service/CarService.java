@@ -2,13 +2,13 @@ package com.udacity.vehicles.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import com.udacity.vehicles.client.maps.MapsClient;
 import com.udacity.vehicles.client.prices.PriceClient;
 import com.udacity.vehicles.domain.Location;
 import com.udacity.vehicles.domain.car.Car;
 import com.udacity.vehicles.domain.car.CarRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 /**
  * Implements the car service create, read, update or delete
@@ -33,7 +33,13 @@ public class CarService {
      * @return a list of all vehicles in the CarRepository
      */
     public List<Car> list() {
-        return repository.findAll();
+        return repository.findAll().stream().map(car -> {
+            String price = priceClient.getPrice(car.getId());
+            car.setPrice(price);
+            Location location = mapsClient.getAddress(car.getLocation());
+            car.setLocation(location);
+            return car;
+        }).collect(Collectors.toList());
     }
 
     /**
