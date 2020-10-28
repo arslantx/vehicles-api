@@ -1,15 +1,17 @@
-# ND035-P02-VehiclesAPI-Project
+# VehiclesAPI-Project
 
-Project repository for JavaND Project 2, where students implement a Vehicles API using Java and Spring Boot that can communicate with separate location and pricing services.
+Project repository for JavaND Project 2, implementing a Vehicles API using Java and Spring Boot that can communicate with separate location and pricing services.
 
 ## Instructions
 
-Check each component to see its details and instructions. Note that all three applications
-should be running at once for full operation. Further instructions are available in the classroom.
+Run following services in order by executing `mvn spring-boot:run` command
 
-- [Vehicles API](vehicles-api/README.md)
-- [Pricing Service](pricing-service/README.md)
-- [Boogle Maps](boogle-maps/README.md)
+- [Eureka Server]
+- [Boogle Maps Service]
+- [Pricing Service]
+- [Vehicles Api]
+
+Once all services are started, open https://localhost:8080/swagger-ui.html
 
 ## Dependencies
 
