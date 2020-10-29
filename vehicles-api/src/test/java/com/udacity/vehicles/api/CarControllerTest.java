@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -94,7 +95,6 @@ public class CarControllerTest {
     @Test
     public void listCars() throws Exception {
         Car car = getCar();
-        car.setId(1L);
         mvc.perform(get(new URI("/cars")).accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..carList", hasSize(1)))
@@ -127,6 +127,24 @@ public class CarControllerTest {
                 .andExpect(jsonPath("$.location.lat", is(car.getLocation().getLat())))
                 .andExpect(jsonPath("$.location.lon", is(car.getLocation().getLon())));
         verify(carService, times(1)).findById(eq(1L));
+    }
+
+    /**
+     * Tests the update operation for a single car by ID.
+     * @throws Exception if update operation for a single car fails
+     */
+    @Test
+    public void updateCar() throws Exception {
+        Car car = getCar();
+        car.setCondition(Condition.NEW);
+        car.getDetails().setModel("Camaro");
+        car.getDetails().setMileage(0);
+        mvc.perform(put(new URI("/cars/1"))
+                        .content(json.write(car).getJson())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
+        verify(carService, times(1)).save(any(Car.class));
     }
 
     /**
